@@ -284,8 +284,10 @@ From `data-instance`:
 ```bash
 curl -m 5 https://www.google.com
 ```
-**Result:** `curl: (28) Connection timed out after 5000 milliseconds`
+**Result:** `curl: (28) Connection timed out after 5000 milliseconds`  
 **Confirms:** `rt-data` doesn't have a route to the internet.
+
+![Test 1 Results](images/test-1.png)
 
 ### 10.2 Web → Data Direct Access Is Blocked
 
@@ -293,8 +295,10 @@ From `web-instance`:
 ```bash
 curl -m 5 http://<data-instance-private-ip>:3306
 ```
-**Result:** `curl: (28) Connection timed out after 5002 milliseconds`
+**Result:** `curl: (28) Connection timed out after 5002 milliseconds`  
 **Confirms:** neither `data-sg` or `data-nacl` allow traffic from `subnet-web` on port 3306. The connection attempt should be silently dropped, not refused.
+
+![Test 2 Results](images/test-2.png)
 
 ### 10.3 App → Data Access Works on the Database Port
 
@@ -302,8 +306,10 @@ From `app-instance`:
 ```bash
 curl -m 5 http://<data-instance-private-ip>:3306
 ```
-**Result:** `curl: (7) Failed to connect ... Could not connect to server` (instant, ~0–1ms)
+**Result:** `curl: (7) Failed to connect ... Could not connect to server` (instant, ~0–1ms)  
 **Confirms:** the network path from `subnet-app` to `subnet-data` on port 3306 is open. While it is refused initially, the instant refusal indicates that the packet did reach the instance but was rejected because no services are listening on that port. 
+
+![Test 3 Results](images/test-3.png)
 
 ### 10.4 SSH Is Blocked on Every Instance
 
@@ -311,8 +317,10 @@ From a local terminal, targeting `web-instance`'s public IP:
 ```bash
 ssh -i fakekey.pem ec2-user@<web-instance-public-ip>
 ```
-**Result:** `ssh: connect to host <ip> port 22: Connection timed out`
+**Result:** `ssh: connect to host <ip> port 22: Connection timed out`  
 **Confirms:** no security group in the environment has an inbound rule for port 22 so port 22 connections will be denied.
+
+![Test 4 Results](images/test-4.png)
 
 ### 10.5 Traffic Logging Captures the Above Activity
 

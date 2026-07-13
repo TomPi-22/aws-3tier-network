@@ -236,7 +236,6 @@ Three VPC interface endpoints were created in `subnet-data` to provide a private
 All three instances were confirmed as managed nodes in **Systems Manager → Fleet Manager**, each showing an **Online** ping status.
 
 ![Fleet Manager](images/fleet-manager.png)
-![Managed Nodes](images/managed-nodes.png)
 
 Session Manager was used to open interactive shell sessions on all three instances for testing (see [Section 10](#10-testing-and-verification)) — no SSH client, key pair, or bastion host was used at any point.
 

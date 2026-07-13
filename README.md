@@ -34,7 +34,7 @@ The environment consists of a single VPC (`vpc-3tier`, `10.0.0.0/16`) split into
 
 ## Repository Structure
 
-This repository contains a single deployment guide (`aws-3tier-deployment.md`) and an `images` folder containing all screenshots referenced within it.
+This repository contains a single deployment guide (`aws-3tier-deployment.md`), an `images` folder containing all screenshots referenced within it, and a `logs` folder containing the test verification log.
 
 ---
 

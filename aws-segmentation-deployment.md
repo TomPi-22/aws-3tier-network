@@ -9,7 +9,7 @@ This guide assumes the following:
 - Ability to navigate and utilize AWS interfaces
 - Basic familiarity with subnetting, routing, and access control concepts
 
-> **Note:** This project was deployed in an AWS Academy Learner Lab environment. Due to the permissions allocated, some IAM actinos are restricted.
+> **Note:** This project was deployed in an AWS Academy Learner Lab environment. Due to the permissions allocated, some IAM actions are restricted.
 
 ---
 
@@ -147,9 +147,9 @@ A NAT Gateway (`nat-3tier`) was created in `subnet-web` to give the app tier out
 | data-sg | TCP 3306 | app-sg | DB traffic from app tier only |
 | endpoints-sg | TCP 443 | web-sg, app-sg, data-sg | VPC endpoint access from all three tiers |
 
-> **Note:** Security group names avoid the `sg-` prefix, which AWS reserves for auto-generated security group IDs and rejects in custom names. This is why `sg-` is placed after the main title.
+> **Note:** Security group names avoid the `sg-` prefix, which AWS reserves for auto-generated security group IDs and rejects in custom names.
 
-`endpoints-sg` exists as a separate group to keep access to endpoints and the database seperate. These are single purpose rulesets to keep each security group and ruleset specific, reducing overlap.
+`endpoints-sg` exists as a separate group to keep access to endpoints and the database separate. These are single purpose rulesets to keep each security group and ruleset specific, reducing overlap.
 
 ![web-sg Rules](images/web-sg.png)
 ![app-sg Rules](images/app-sg.png)
@@ -292,24 +292,25 @@ curl -m 5 https://www.google.com
 
 From `web-instance`:
 ```bash
-curl -m 5 http://data-instance-private-ip:3306
+curl -m 5 http://<data-instance-private-ip>:3306
 ```
 **Result:** `curl: (28) Connection timed out after 5002 milliseconds`
 **Confirms:** neither `data-sg` or `data-nacl` allow traffic from `subnet-web` on port 3306. The connection attempt should be silently dropped, not refused.
+
 ### 10.3 App → Data Access Works on the Database Port
 
 From `app-instance`:
 ```bash
-curl -m 5 http://data-instance-private-ip:3306
+curl -m 5 http://<data-instance-private-ip>:3306
 ```
 **Result:** `curl: (7) Failed to connect ... Could not connect to server` (instant, ~0–1ms)
-**Confirms:** the network path from `subnet-app` to `subnet-data` on port 3306 is open. While it is refused initially, the instant refusal indicates that the packet did reach the instance but was rejected because no services are listening on either service. 
+**Confirms:** the network path from `subnet-app` to `subnet-data` on port 3306 is open. While it is refused initially, the instant refusal indicates that the packet did reach the instance but was rejected because no services are listening on that port. 
 
 ### 10.4 SSH Is Blocked on Every Instance
 
 From a local terminal, targeting `web-instance`'s public IP:
 ```bash
-ssh -i fakekey.pem ec2-user@web-instance-public-ip
+ssh -i fakekey.pem ec2-user@<web-instance-public-ip>
 ```
 **Result:** `ssh: connect to host <ip> port 22: Connection timed out`
 **Confirms:** no security group in the environment has an inbound rule for port 22 so port 22 connections will be denied.
